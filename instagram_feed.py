@@ -27,8 +27,7 @@ def instagram_feed(user_handle="google", user_id=1067259270):
                 "likes": raw_item["likes"]["count"] or 0,
                 "media": [],
                 "video_views": raw_item.get('video_view_count') or 0,
-                "title": raw_item["edge_media_to_caption"]["edges"][0]["node"]["text"] or '',
-                "description": raw_item["edge_media_to_caption"]["edges"][0]["node"]["text"] or '',
+                "caption": raw_item["edge_media_to_caption"]["edges"][0]["node"]["text"] or '',
             }
 
             feed_info['pubDate'] = date.strftime('%a, %d %b %Y %H:%M:%S') + ' GMT'
