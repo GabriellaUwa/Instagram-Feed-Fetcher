@@ -1,12 +1,17 @@
 """
 Fetches instagram feed using instagram_private_api library
 """
+from flask import Flask
+from io import BytesIO
 from datetime import datetime
 from instagram_web_api import Client
+import json
+app = Flask(__name__)
 
-def instagram_feed(user_handle=None, user_id=None):
+@app.route('/instagram_feeds')
+def instagram_feed(user_handle="google", user_id=1067259270):
 
-    ret = []
+    feed_list = []
     user_id = user_id #TODO:generate user_id given a user_handle
     web_api = Client(auto_patch=True, drop_incompat_keys=False)
     user_feed_info = web_api.user_feed(user_id, count=50) #gets fifty user feeds
@@ -36,13 +41,11 @@ def instagram_feed(user_handle=None, user_id=None):
                 if vid_link:
                     feed_info['media'].append(vid_link)
 
-            ret.append(feed_info)
+            feed_list.append(feed_info)
         except:
             raise ("Could not get instagram feed or Feed does not exist")
 
-    return ret
+    return app.response_class(BytesIO(json.dumps(feed_list)), content_type='application/json')
 
-#TODO: give a more nicer output rather than print
-id = 1067259270
-user_handle="google"
-print(instagram_feed(user_handle, id))
+if __name__ == '__main__':
+    app.run()
